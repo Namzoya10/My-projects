@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>BMAT - Book Me a Trip | Akwaaba</title>
+<style>
+:root{--bg:#fbf4e4;--ink:#2a1a0f;--mute:#6b5846;--card:#fffaf0;--line:#e3d3b0;--red:#ce1126;--gold:#fcd116;--green:#006b3f;--acc:#006b3f;--on:#fff;--l1:#006b3f;--l2:#ce1126;--navbg:rgba(251,244,228,.5);--glass:rgba(255,250,240,.6);--gb:rgba(255,255,255,.7);
+--kente:repeating-linear-gradient(90deg,#ce1126 0 22px,#fcd116 22px 34px,#006b3f 34px 58px,#111 58px 64px,#fcd116 64px 72px);
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1a120b;--ink:#f6ead2;--mute:#c2b196;--card:#251a11;--line:#4a3826;--acc:#f2c230;--on:#1a120b;--l1:#f2c230;--l2:#ff8a8a;--navbg:rgba(26,18,11,.5);--glass:rgba(37,26,17,.65);--gb:rgba(255,255,255,.16)}}
+:root[data-theme="dark"]{--bg:#1a120b;--ink:#f6ead2;--mute:#c2b196;--card:#251a11;--line:#4a3826;--acc:#f2c230;--on:#1a120b;--l1:#f2c230;--l2:#ff8a8a;--navbg:rgba(26,18,11,.5);--glass:rgba(37,26,17,.65);--gb:rgba(255,255,255,.16)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,sans-serif}
+[hidden]{display:none!important}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.kente{height:10px;background:var(--kente)}
+button{font-family:inherit}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--red);outline-offset:2px}
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:14px 32px 8px}
+.logo{display:flex;align-items:flex-start;background:none;border:0;cursor:pointer;color:var(--l1);font:700 36px/1 system-ui,sans-serif;padding:0}
+.logo small{font:700 14px/1.05 system-ui,sans-serif;margin-left:2px;text-align:left;color:var(--l2)}
+.user{display:grid;place-items:center;width:46px;height:46px;border-radius:50%;border:2px solid var(--acc);background:var(--card);color:var(--acc);font:700 20px system-ui;cursor:pointer}
+nav.main{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--navbg);-webkit-backdrop-filter:blur(16px) saturate(1.5);backdrop-filter:blur(16px) saturate(1.5);border-bottom:3px solid var(--gold)}
+ul.list{list-style:none;margin:0;padding:6px 16px;display:flex;justify-content:center;flex-wrap:wrap;gap:2px 22px}
+.icon{display:inline-flex;align-items:center;gap:8px;color:var(--ink);font:600 16px system-ui;padding:8px 14px;border:0;border-bottom:3px solid transparent;border-radius:12px;background:none;cursor:pointer;min-height:44px;transition:background .2s,transform .2s,box-shadow .2s}
+.icon[aria-selected="true"]{border-bottom-color:var(--red)}
+.icon:hover{background:var(--glass);box-shadow:0 6px 14px rgba(0,0,0,.12)}
+@media (prefers-reduced-motion:no-preference){.icon:hover{transform:translateY(-3px) scale(1.07)}.icon:active{transform:scale(.97)}}
+.hero{position:relative;overflow:hidden;text-align:center;color:#fdf3d6;background:linear-gradient(135deg,#0a4a2d,#006b3f);padding:44px 20px 36px}
+.hero::before,.hero::after{content:"\2605";position:absolute;font-size:150px;line-height:1;color:rgba(252,209,22,.13)}
+.hero::before{left:4%;top:10px}.hero::after{right:5%;bottom:-20px}
+.hero>*{position:relative;z-index:1}
+.kick{font:italic 700 20px Georgia,serif;color:var(--gold)}
+.main_heading{font:700 38px/1.1 Georgia,'Times New Roman',serif;margin:6px 0 0}
+.secondary_heading{font:italic 700 24px/1.3 Georgia,serif;margin:10px 0 0}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+.fld label,.panel label{display:block;font-weight:600;font-size:14px;margin-bottom:4px}
+select,input[type=text],input[type=email],input[type=tel],input[type=date],input[type=number],input[type=search]{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);font:15px system-ui;min-height:44px}
+.panel{background:var(--card);border:1px solid var(--line);border-top:5px solid var(--gold);border-radius:8px;padding:18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin:22px 0}
+.panel.home{grid-template-columns:1.2fr 1fr 1fr}
+.search-form{grid-column:1/-1;display:flex}
+.search-form input{border-radius:6px 0 0 6px;border-right:0}
+.search-button{border:1px solid var(--line);background:var(--acc);color:var(--on);border-radius:0 6px 6px 0;padding:0 18px;cursor:pointer;font-size:17px;min-height:44px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:2px solid var(--acc);background:transparent;color:var(--ink);border-radius:6px;padding:8px 14px;font:600 15px system-ui;cursor:pointer;min-height:44px}
+.chip[aria-pressed="true"]{background:var(--acc);color:var(--on)}
+.out{font:700 20px Georgia,serif}
+input[type=range]{width:100%;accent-color:var(--green);height:32px}
+.book{background:var(--acc);color:var(--on);border:0;border-radius:6px;padding:10px 16px;font:600 15px system-ui;cursor:pointer;min-height:44px}
+.book:hover{filter:brightness(1.12)}
+.count{color:var(--mute);margin:0 0 12px}
+.railwrap{display:flex;align-items:center;gap:8px}
+.arrow{flex:none;width:44px;height:44px;border-radius:50%;border:2px solid var(--acc);background:var(--card);color:var(--acc);font-size:24px;cursor:pointer}
+.rail{display:flex;gap:22px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;padding:10px 6px 26px;flex:1;scrollbar-width:none}
+.rail::-webkit-scrollbar{display:none}
+.item{flex:0 0 220px;scroll-snap-align:center;display:flex;flex-direction:column;align-items:center;text-align:center;gap:2px}
+.ph{width:200px;height:200px;border-radius:50%;display:grid;place-items:center;color:var(--ink);background:linear-gradient(145deg,var(--p1),var(--p2));border:5px solid var(--gold);box-shadow:0 0 0 4px var(--green),0 12px 24px rgba(0,0,0,.18);margin-bottom:14px}
+.ph svg,.im svg{width:60px;height:60px;opacity:.5}
+.item h3{font:700 22px/1.15 Georgia,serif;margin:0}.item .c{font-size:14px;font-weight:600}.item .d{font-size:13px;color:var(--mute);max-width:190px}.item .pr{font:700 20px Georgia,serif;margin-top:2px}
+.item .book{margin-top:8px;min-height:36px;padding:6px 16px}
+.pagehead h2{font:700 36px/1.1 Georgia,serif;margin:28px 0 6px}.pagehead p{margin:0;color:var(--mute);max-width:60ch}
+.pagehead::after{content:"";display:block;height:8px;width:160px;margin-top:12px;background:var(--kente)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px;padding-bottom:40px}
+.card{background:var(--card);border:1px solid var(--line);border-top:6px solid var(--red);border-radius:8px;overflow:hidden;display:flex;flex-direction:column}
+.card:nth-child(3n+2){border-top-color:var(--gold)}.card:nth-child(3n){border-top-color:var(--green)}
+.im{height:120px;display:grid;place-items:center;color:var(--ink);background:linear-gradient(145deg,var(--p1),var(--p2))}
+.cb{padding:16px;display:flex;flex-direction:column;gap:6px;flex:1}
+.cb h3{font:700 21px Georgia,serif;margin:0}.sub{font-size:14px;font-weight:600;color:var(--acc)}.cb p{margin:0;color:var(--mute);font-size:15px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:auto;padding-top:8px}.row .pr{font:700 20px Georgia,serif}
+.empty{padding:30px 0;color:var(--mute)}
+.chatrow{display:flex;justify-content:flex-end;padding-top:6px;padding-bottom:28px}
+.chatbtn{display:flex;align-items:center;gap:14px;width:250px;height:64px;padding:0 18px;border-radius:10px;border:2px solid var(--green);background:var(--card);box-shadow:4px 4px 0 var(--gold);color:var(--ink);cursor:pointer;text-align:left;font:16px system-ui}
+.chatbtn .ci{font-size:26px}.chatbtn .ct{display:flex;flex-direction:column;line-height:1.2}.chatbtn small{color:var(--mute);font-size:13px}
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:opacity .25s;z-index:20}.scrim.open{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;height:100%;width:min(390px,100%);background:var(--card);color:var(--ink);z-index:30;transform:translateX(100%);visibility:hidden;transition:transform .3s ease,visibility .3s;overflow:auto;box-shadow:-8px 0 30px rgba(0,0,0,.3);display:flex;flex-direction:column}
+.drawer.open{transform:none;visibility:visible}
+.drawer .in{padding:22px 22px calc(28px + env(safe-area-inset-bottom,0px));display:grid;gap:14px}
+.drawer h2{font:700 28px Georgia,serif;margin:0}.drawer .x{position:absolute;top:14px;right:14px;width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--bg);color:var(--ink);font-size:22px;cursor:pointer}
+.chk{display:flex;flex-wrap:wrap;gap:8px}.chk label{display:flex;align-items:center;gap:6px;border:2px solid var(--acc);border-radius:6px;padding:8px 12px;font-weight:600;cursor:pointer;min-height:44px}
+.chk input{accent-color:var(--green);width:18px;height:18px}
+dialog{background:var(--card);color:var(--ink);border:2px solid var(--green);border-radius:12px;padding:0;max-width:420px;width:calc(100% - 32px)}
+dialog::backdrop{background:rgba(0,0,0,.55)}
+.pass{padding:24px;display:grid;gap:12px}.pass h3{font:700 28px Georgia,serif;margin:0}
+.pass dl{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;margin:0}.pass dt{color:var(--mute)}.pass dd{margin:0;font-weight:600;text-align:right}
+.tear{border-top:2px dashed var(--line)}.note{font-size:14px;color:var(--mute);margin:0}
+.msgs{max-height:240px;overflow:auto;display:flex;flex-direction:column;gap:6px}
+.msg{padding:8px 12px;border-radius:14px;max-width:85%;background:var(--bg);border:1px solid var(--line)}
+.msg.me{align-self:flex-end;background:var(--acc);color:var(--on);border-color:transparent}
+.send{display:flex;gap:8px}.send input{border-radius:999px}
+footer{margin-top:10px;text-align:center;color:var(--mute);font-size:14px;padding:18px 20px 40px}
+@media(max-width:760px){.panel.home{grid-template-columns:1fr}.topbar{padding:12px 18px 6px}}
+@media (prefers-reduced-motion:reduce){.drawer,.scrim{transition:none}}
+
+.chatwrap{position:relative}
+.chatbtn{transition:transform .2s ease,box-shadow .2s ease}
+.chatbtn:hover,.chatbtn:focus-visible{box-shadow:6px 8px 0 var(--gold),0 14px 26px rgba(0,0,0,.22)}
+@media (prefers-reduced-motion:no-preference){.chatbtn:hover,.chatbtn:focus-visible{transform:translateY(-6px) scale(1.06)}}
+.recent{position:absolute;right:0;bottom:100%;padding-bottom:14px;width:290px;opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .2s,transform .2s,visibility .2s;z-index:5}
+.chatwrap:hover .recent,.chatwrap:focus-within .recent{opacity:1;visibility:visible;transform:none}
+.rbox{background:var(--card);border:2px solid var(--green);border-radius:10px;padding:10px;box-shadow:0 12px 28px rgba(0,0,0,.22)}
+.rbox h3{font:700 15px Georgia,serif;margin:0 0 6px}
+.rc{display:flex;flex-direction:column;width:100%;text-align:left;background:none;border:0;border-top:1px solid var(--line);padding:8px 4px;cursor:pointer;color:var(--ink);font:14px system-ui;min-height:44px}
+.rc span{color:var(--mute);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rc:hover{background:var(--bg)}
+#tip{position:fixed;z-index:40;max-width:260px;background:#2a1a0f;color:#fbf4e4;padding:10px 12px;border-radius:8px;font-size:14px;line-height:1.4;box-shadow:0 10px 24px rgba(0,0,0,.3);pointer-events:none;display:flex;flex-direction:column;gap:2px;border-bottom:3px solid var(--gold)}
+#tip b{font:700 15px Georgia,serif;color:var(--gold)}
+.chatpg{display:grid;grid-template-columns:270px 1fr;border:1px solid var(--line);border-top:5px solid var(--green);border-radius:10px;overflow:hidden;background:var(--card);height:min(68vh,540px);margin:22px 0 14px}
+.side{border-right:1px solid var(--line);display:flex;flex-direction:column;min-height:0}
+.nf{display:flex;gap:6px;padding:10px}.nf input{min-width:0}.nf .book{padding:0 14px}
+.cl{list-style:none;margin:0;padding:0;overflow:auto}
+.chatli{display:flex;flex-direction:column;width:100%;text-align:left;background:none;border:0;border-top:1px solid var(--line);padding:10px 14px;cursor:pointer;color:var(--ink);font:15px system-ui;min-height:44px}
+.chatli span{color:var(--mute);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chatli[aria-current="true"]{background:var(--bg);border-left:4px solid var(--red)}
+.conv{display:flex;flex-direction:column;min-width:0;min-height:0}
+.chd{padding:12px 16px;border-bottom:1px solid var(--line);display:flex;flex-direction:column}.chd small{color:var(--mute)}
+.chatpg .msgs{flex:1;max-height:none;padding:14px 16px}.chatpg .send{padding:10px 12px;border-top:1px solid var(--line)}
+.msg .who{display:block;font-size:12px;font-weight:700;color:var(--acc)}.msg .tm{display:block;font-size:11px;opacity:.7;text-align:right}
+.ph:focus-visible{outline-offset:6px}
+@media(max-width:700px){.chatpg{grid-template-columns:1fr;grid-template-rows:200px 1fr;height:78vh}.side{border-right:0;border-bottom:1px solid var(--line)}}
+
+.kente{height:4px}
+.hero::before,.hero::after{content:none}
+.hero{padding:40px 20px 34px;background:linear-gradient(135deg,#0d5636,#0a6a41)}
+nav.main{border-bottom:1px solid var(--line)}
+.panel{border:1px solid var(--line);border-radius:10px}
+.pagehead::after{content:none}
+.card,.card:nth-child(3n+2),.card:nth-child(3n){border-top:3px solid var(--acc);border-radius:10px}
+.ph{border:3px solid var(--card);box-shadow:0 10px 22px rgba(0,0,0,.16)}
+.chatbtn,.chatbtn:hover,.chatbtn:focus-visible{border:1px solid var(--line);box-shadow:0 6px 16px rgba(0,0,0,.12)}
+.chatbtn:hover,.chatbtn:focus-visible{box-shadow:0 12px 24px rgba(0,0,0,.2)}
+.chatpg{border-top:1px solid var(--line)}
+.rbox,dialog{border:1px solid var(--line)}
+#tip{border-bottom:0}
+
+.rvsec{margin:4px 0 14px}
+.rvsec h2{font:700 24px Georgia,serif;margin:6px 0 10px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.rvx{background:none;border:1px solid var(--line);color:var(--mute);border-radius:6px;padding:6px 12px;font:600 13px system-ui;cursor:pointer;min-height:36px}
+.rvlist{display:flex;gap:12px;overflow-x:auto;padding:4px 2px 12px;scrollbar-width:thin}
+.rv{flex:0 0 200px;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;cursor:pointer;color:var(--ink);font:14px system-ui;display:flex;flex-direction:column;gap:2px;min-height:44px}
+.rv:hover{border-color:var(--acc)}
+.rv small{color:var(--acc);font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:11px}
+.rv b{font:700 17px Georgia,serif}.rv span{color:var(--mute);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rvempty{color:var(--mute);font-size:15px;margin:0 0 8px}
+.rail{scroll-snap-type:none;scroll-behavior:auto}.item{scroll-snap-align:none}
+.crow{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px}.crow .count{margin:0}
+</style>
+</head>
+<body>
+<div class="kente"></div>
+<div class="topbar">
+ <button class="logo" id="logo" aria-label="BMAT, book me a trip. Go to home">BMAT<small>book<br>me a<br>trip</small></button>
+ <button class="user" id="userbtn" aria-label="Log in or create a profile">&#128100;</button>
+</div>
+<nav class="main" aria-label="Services"><ul class="list" id="tabs">
+ <li><button class="icon" aria-selected="false" data-v="flights">&#9992; Flights</button></li>
+ <li><button class="icon" aria-selected="false" data-v="hotels">&#128716; Hotels</button></li>
+ <li><button class="icon" aria-selected="false" data-v="restaurants">&#127869; Restaurants</button></li>
+ <li><button class="icon" aria-selected="false" data-v="transport">&#128663; Transport</button></li>
+</ul></nav>
+
+<main>
+<section id="v-home">
+ <div class="hero"><div class="kick">Akwaaba, welcome</div><h1 class="main_heading">PLAN YOUR VACATION</h1><h2 class="secondary_heading">Plan your next ideal trip with your friends and family</h2></div>
+ <div class="wrap">
+  <section class="panel home" aria-label="Search and trip filters">
+   <form class="search-form" id="sf" action="/search" method="GET"><label for="site-search" class="vh">Search destinations</label><input type="search" id="site-search" name="q" placeholder="Search destinations..."><button type="submit" class="search-button" aria-label="Search">&#128269;</button></form>
+   <div><label id="l1">What kind of trip?</label><div class="chips" id="vibes" role="group" aria-labelledby="l1"></div></div>
+   <div><label for="budget">Max budget per person</label><div class="out" id="bout"></div><input type="range" id="budget" min="300" max="3000" step="50" value="1800"></div>
+   <div><label for="nights">Nights</label><div class="out" id="nout"></div><input type="range" id="nights" min="3" max="14" step="1" value="7"></div>
+  </section>
+  <div class="crow"><p class="count" id="count" aria-live="polite"></p><button class="rvx" id="apause" aria-pressed="false">Pause</button></div>
+  <div class="railwrap" id="cityrw"><button class="arrow" id="prev" aria-label="Previous cities">&#8249;</button><section class="rail" id="rail" aria-label="Cities, swipe to view more"></section><button class="arrow" id="next" aria-label="Next cities">&#8250;</button></div>
+  <section class="rvsec" aria-label="Recently visited"><h2>Recently visited <button class="rvx" id="rvx">Clear</button></h2><div class="rvlist" id="rvlist"></div></section>
+  <div class="chatrow"><div class="chatwrap"><div class="recent" id="recent"></div><button class="chatbtn" id="chatbtn"><span class="ci">&#128172;</span><span class="ct"><b>Group chat</b><small>Plan together</small></span></button></div></div>
+ </div>
+</section>
+
+<section id="v-flights" hidden><div class="wrap">
+ <div class="pagehead"><h2>Flights</h2><p>Fly out of Ghana to the places on your list.</p></div>
+ <form class="panel" id="ff">
+  <div class="fld"><label for="ffrom">From</label><select id="ffrom"><option value="ACC">Accra (ACC)</option><option value="KMS">Kumasi (KMS)</option><option value="TML">Tamale (TML)</option></select></div>
+  <div class="fld"><label for="fto">To</label><select id="fto"></select></div>
+  <div class="fld"><label for="fdate">Depart</label><input type="date" id="fdate"></div>
+  <div class="fld"><label for="fpax">Travellers</label><input type="number" id="fpax" min="1" max="9" value="1"></div>
+  <div class="fld" style="align-self:end"><button class="book" style="width:100%">Search flights</button></div>
+ </form>
+ <p class="count" id="fcount" aria-live="polite"></p><div class="cards" id="fout"></div>
+</div></section>
+
+<section id="v-hotels" hidden><div class="wrap">
+ <div class="pagehead"><h2>Hotels</h2><p>From beach resorts to quiet lodges near Ghana's heritage sites.</p></div>
+ <div class="panel"><div><label id="hl">City</label><div class="chips" id="hchips" role="group" aria-labelledby="hl"></div></div></div>
+ <div class="cards" id="hout"></div>
+</div></section>
+
+<section id="v-restaurants" hidden><div class="wrap">
+ <div class="pagehead"><h2>Restaurants</h2><p>Jollof, banku and tilapia, waakye, kelewele and more.</p></div>
+ <div class="panel"><div><label id="rl">Cuisine</label><div class="chips" id="rchips" role="group" aria-labelledby="rl"></div></div></div>
+ <div class="cards" id="rout"></div>
+</div></section>
+
+<section id="v-transport" hidden><div class="wrap">
+ <div class="pagehead"><h2>Transport</h2><p>Airport pickups, drivers, intercity buses and rides around town.</p></div>
+ <div class="panel"><div><label id="tl">Type</label><div class="chips" id="tchips" role="group" aria-labelledby="tl"></div></div></div>
+ <div class="cards" id="tout"></div>
+</div></section>
+<section id="v-chat" hidden><div class="wrap">
+ <div class="pagehead"><h2>Group chat</h2><p>Plan together with your travel friends. Messages stay on this page.</p></div>
+ <div class="chatpg">
+  <div class="side"><form class="nf" id="nf"><label class="vh" for="nn">New chat name</label><input type="text" id="nn" placeholder="Start a new chat..." required><button class="book" aria-label="Create chat">+</button></form><ul class="cl" id="cl"></ul></div>
+  <div class="conv"><div class="chd"><b id="ch"></b><small id="cm"></small></div><div class="msgs" id="msgs" aria-live="polite"></div>
+   <form class="send" id="cf"><label class="vh" for="ci">Message</label><input type="text" id="ci" placeholder="Type a message" autocomplete="off"><button class="book">Send</button></form></div>
+ </div>
+ <button class="chip" id="cback" aria-pressed="false">&larr; Back to home</button>
+</div></section>
+</main>
+<div id="tip" role="tooltip" hidden></div>
+
+<div class="kente"></div>
+<footer>BMAT, book me a trip.</footer>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="Profile" aria-hidden="true">
+ <div class="kente"></div><button class="x" id="dx" aria-label="Close profile panel">&times;</button><div class="in" id="din"></div>
+</aside>
+<dialog id="dlg"><div class="pass" id="pass"></div></dialog>
+
+<script>
+var $=function(i){return document.getElementById(i)},$$=function(s){return [].slice.call(document.querySelectorAll(s))};
+var IMG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.6"/><path d="M4 18l5-5 4 4 3-3 4 4"/></svg>';
+var COL=["#e7a33e","#c8553d","#3f8f5f","#d9b26f","#b5651d","#6a9955"];
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function pc(c){return '--p1:'+c+';--p2:color-mix(in srgb,'+c+' 55%,#fff)'}
+/* tooltip */
+var tipEl=$("tip"),tipFor=null;
+function tipOn(el,t,x){tipEl.innerHTML='<b>'+esc(t)+'</b><span>'+esc(x)+'</span>';tipEl.hidden=false;tipFor=el;el.setAttribute("aria-describedby","tip");
+ var r=el.getBoundingClientRect(),w=tipEl.offsetWidth,h=tipEl.offsetHeight,l=Math.max(8,Math.min(innerWidth-w-8,r.left+r.width/2-w/2)),tp=r.top-h-10;if(tp<8)tp=r.bottom+10;tipEl.style.left=l+"px";tipEl.style.top=tp+"px"}
+function tipOff(){tipEl.hidden=true;if(tipFor){tipFor.removeAttribute("aria-describedby");tipFor=null}}
+function bind(el,t,x){el.onmouseenter=function(){tipOn(el,t,x)};el.onmouseleave=tipOff;el.onfocusin=function(){tipOn(el,t,x)};el.onfocusout=tipOff}
+window.addEventListener("scroll",tipOff,true);document.addEventListener("pointerdown",function(e){if(tipFor&&!tipFor.contains(e.target))tipOff()});
+/* views */
+var V=["home","flights","hotels","restaurants","transport","chat"];
+function show(v){V.forEach(function(x){$("v-"+x).hidden=x!==v});$$("#tabs .icon").forEach(function(b){b.setAttribute("aria-selected",b.dataset.v===v)});window.scrollTo({top:0,behavior:"smooth"})}
+$$("#tabs .icon").forEach(function(b){b.onclick=function(){show(b.dataset.v)}});$("logo").onclick=function(){show("home")};
+/* sheet */
+function sheet(h){$("pass").className="pass";$("pass").innerHTML=h+'<button class="book" id="close">Close</button>';$("close").onclick=function(){$("dlg").close()};$("dlg").showModal()}
+function ticket(o,kind){if(kind)visit(o,kind);sheet('<h3>'+esc(o.t)+'</h3><dl>'+o.rows.map(function(r){return '<dt>'+esc(r[0])+'</dt><dd>'+esc(r[1])+'</dd>'}).join("")+'</dl><div class="tear"></div><p class="note">This is a demo, so nothing is reserved and no payment is taken.</p>')}
+function mount(el,items){el.innerHTML="";if(!items.length){el.innerHTML='<div class="empty">Nothing matches yet.</div>';return}
+ items.forEach(function(o,i){var a=document.createElement("article");a.className="card";
+  a.innerHTML=(o.c?'<div class="im" style="'+pc(o.c)+'" role="img" aria-label="Photo placeholder">'+IMG+'</div>':'')+'<div class="cb"><h3>'+esc(o.t)+'</h3><div class="sub">'+esc(o.s)+'</div><p>'+esc(o.d)+'</p><div class="row"><div class="pr">'+esc(o.p)+'</div><button class="book">'+esc(o.b)+'</button></div></div>';
+  if(o.k)bind(a,o.t,o.k);a.querySelector(".book").onclick=function(){ticket(o,{fout:"Flight",hout:"Hotel",rout:"Restaurant",tout:"Transport"}[el.id])};el.appendChild(a)})}
+function chips(id,opts,cb){var el=$(id),cur=opts[0];opts.forEach(function(o){var b=document.createElement("button");b.type="button";b.className="chip";b.textContent=o;b.setAttribute("aria-pressed",o===cur);
+ b.onclick=function(){$$("#"+id+" .chip").forEach(function(x){x.setAttribute("aria-pressed",x===b)});cb(o)};el.appendChild(b)})}
+/* home */
+var TRIPS=[
+{n:"Accra",c:"Ghana",v:"City",p:520,d:"Beaches, art, jazz nights and Makola market.",col:COL[0],b:"Ghana's capital on the Gulf of Guinea. See Independence Square, Jamestown and Labadi Beach. Best from November to March."},
+{n:"Kumasi",c:"Ghana",v:"Culture",p:480,d:"Manhyia Palace, Kejetia market and kente weaving villages.",col:COL[1],b:"Heart of the Ashanti Kingdom. Visit the Manhyia Palace Museum, Kejetia market and kente weavers in nearby Bonwire."},
+{n:"Tamale",c:"Ghana",v:"Culture",p:450,d:"Northern markets, Dagomba culture and a gateway to Mole.",col:COL[2],b:"The largest city in northern Ghana. A lively market town and the usual base for trips to Mole National Park."},
+{n:"Cape Coast",c:"Ghana",v:"Culture",p:620,d:"Castle tours, Kakum canopy walk and fresh seafood.",col:COL[3],b:"Historic coastal town with Cape Coast Castle. Kakum National Park's canopy walk and Elmina are a short drive away."},
+{n:"Zanzibar",c:"Tanzania",v:"Beach",p:1250,d:"White sand, spice markets and Stone Town walks.",col:COL[4],b:"Island off Tanzania with Stone Town, a UNESCO World Heritage site, plus spice farms and clear beaches."},
+{n:"Lisbon",c:"Portugal",v:"City",p:1100,d:"Tram rides, tiled hills and late dinners by the river.",col:COL[5],b:"Portugal's hilly capital on the Tagus river, known for trams, fado music, custard tarts and the Alfama district."},
+{n:"Bali",c:"Indonesia",v:"Beach",p:1900,d:"Rice terraces, surf mornings and quiet temple visits.",col:COL[0],b:"Indonesian island with rice terraces around Ubud, surf beaches and many Hindu temples."},
+{n:"Cape Town",c:"South Africa",v:"Adventure",p:1450,d:"Hike Table Mountain, then taste wine in Stellenbosch.",col:COL[1],b:"South African city below Table Mountain, with penguins at Boulders Beach and wine country close by."},
+{n:"Marrakech",c:"Morocco",v:"Culture",p:980,d:"Souks, rooftop dinners and a day trip to the Atlas.",col:COL[2],b:"Moroccan city with the Jemaa el-Fnaa square, maze-like souks and the Atlas Mountains within reach."},
+{n:"Kigali",c:"Rwanda",v:"Adventure",p:1700,d:"Gorilla trekking, lake days and a clean, easy city.",col:COL[3],b:"Rwanda's calm, hilly capital and the starting point for gorilla trekking in Volcanoes National Park."},
+{n:"Nairobi",c:"Kenya",v:"Adventure",p:1350,d:"Morning safari in the park, evening back in the city.",col:COL[4],b:"Kenya's capital, with Nairobi National Park at the edge of the city and the Giraffe Centre nearby."}];
+var vibe="All",q="";
+chips("vibes",["All","Beach","City","Culture","Adventure"],function(v){vibe=v;render()});
+function cost(t){return Math.round(t.p*(0.55+0.063*$("nights").value)/10)*10}
+function render(){var bud=+$("budget").value,n=+$("nights").value;$("bout").textContent="$"+bud.toLocaleString();$("nout").textContent=n+" nights";
+ var l=TRIPS.filter(function(t){return(vibe==="All"||t.v===vibe)&&cost(t)<=bud&&(!q||(t.n+" "+t.c).toLowerCase().indexOf(q)>-1)}).sort(function(a,b){return cost(a)-cost(b)});
+ $("count").textContent=l.length?l.length+" trip"+(l.length>1?"s":"")+" sorted by price":"";var g=$("rail");g.innerHTML="";
+ if(!l.length){g.innerHTML='<div class="empty">No trips match yet. Raise your budget, clear the search or pick another kind of trip.</div>';AU.loop=0;$("apause").hidden=true;return}
+ var mk=function(t,cl){var e=document.createElement("article");e.className="item";if(cl)e.setAttribute("aria-hidden","true");
+  e.innerHTML='<div class="ph" tabindex="0" style="'+pc(t.col)+'" role="img" aria-label="Photo placeholder">'+IMG+'</div><h3>'+t.n+'</h3><div class="c">'+t.c+' &middot; '+t.v+'</div><div class="d">'+t.d+'</div><div class="pr">$'+cost(t).toLocaleString()+'</div><button class="book">Book trip</button>';
+  bind(e.querySelector(".ph"),t.n+", "+t.c,t.b);e.querySelector(".book").onclick=function(){ticket({t:t.n,s:t.c,rows:[["Country",t.c],["Length",n+" nights"],["Includes","Flights and stay"],["Total per person","$"+cost(t).toLocaleString()]]},"Trip")};if(cl)e.querySelectorAll("button,[tabindex]").forEach(function(x){x.tabIndex=-1});g.appendChild(e)};l.forEach(function(t){mk(t,false)});loopSetup(l,mk)}
+$("sf").onsubmit=function(e){e.preventDefault();q=$("site-search").value.trim().toLowerCase();render();$("rail").scrollIntoView({behavior:"smooth",block:"center"})};
+$("site-search").oninput=function(){q=this.value.trim().toLowerCase();render()};
+$("budget").oninput=render;$("nights").oninput=render;
+$("prev").onclick=function(){$("rail").scrollBy({left:-252,behavior:"smooth"})};$("next").onclick=function(){$("rail").scrollBy({left:252,behavior:"smooth"})};
+/* auto-moving cities */
+var AU={on:!matchMedia("(prefers-reduced-motion: reduce)").matches,hover:false,touch:false,user:false,pos:0,loop:0,last:0},tt=0;
+function loopSetup(l,mk){var r=$("rail");AU.loop=0;AU.pos=0;r.scrollLeft=0;
+ var ok=AU.on&&l.length&&r.scrollWidth>r.clientWidth+2;
+ if(ok){var f=r.firstElementChild;l.forEach(function(t){mk(t,true)});AU.loop=r.children[l.length].offsetLeft-f.offsetLeft}
+ $("apause").hidden=!ok}
+function tick(ts){var r=$("rail"),dt=Math.min(ts-AU.last,64);AU.last=ts;
+ var paused=AU.hover||AU.touch||AU.user||document.hidden||$("v-home").hidden;
+ if(AU.loop&&!paused){AU.pos+=dt*0.045;if(AU.pos>=AU.loop)AU.pos-=AU.loop;r.scrollLeft=AU.pos}else AU.pos=r.scrollLeft;
+ requestAnimationFrame(tick)}
+var cw=$("cityrw");cw.onmouseenter=function(){AU.hover=true};cw.onmouseleave=function(){AU.hover=false};
+cw.addEventListener("focusin",function(){AU.hover=true});cw.addEventListener("focusout",function(){AU.hover=false});
+cw.addEventListener("touchstart",function(){AU.touch=true;clearTimeout(tt)},{passive:true});cw.addEventListener("touchend",function(){tt=setTimeout(function(){AU.touch=false},2500)});
+$("apause").onclick=function(){AU.user=!AU.user;this.textContent=AU.user?"Play":"Pause";this.setAttribute("aria-pressed",AU.user)};
+AU.last=performance.now();requestAnimationFrame(tick);
+/* flights */
+var DEST=[["Lagos","LOS",1.1,160],["Nairobi","NBO",5.5,520],["Cape Town","CPT",9.5,780],["Marrakech","RAK",6.3,640],["Lisbon","LIS",6,720],["Dubai","DXB",8,810],["Zanzibar","ZNZ",8.5,690]],ADJ={ACC:0,KMS:60,TML:90};
+DEST.forEach(function(d,i){var o=document.createElement("option");o.value=i;o.textContent=d[0]+" ("+d[1]+")";$("fto").appendChild(o)});
+$("fdate").value=new Date(Date.now()+14*864e5).toISOString().slice(0,10);
+function hm(m){m=((m%1440)+1440)%1440;return String(Math.floor(m/60)).padStart(2,"0")+":"+String(m%60).padStart(2,"0")}
+function flights(){var d=DEST[+$("fto").value],f=$("ffrom").value,pax=Math.max(1,Math.min(9,+$("fpax").value||1)),dm=Math.round(d[2]*60);
+ var A=[["Namzoya Air",390,0],["Gold Coast Airways",675,.12],["Namzoya Express",1120,-.08],["Namzoyas Airways",540,.05]];
+ var items=A.map(function(a){var pr=Math.round((d[3]*(1+a[2])+ADJ[f])/5)*5*pax;return{t:a[0],s:f+" to "+d[1]+" | "+hm(a[1])+" - "+hm(a[1]+dm),d:"Direct, "+Math.floor(dm/60)+"h "+(dm%60)+"m, economy",p:"$"+pr.toLocaleString(),b:"Select",pr:pr,
+  rows:[["Route",f+" to "+d[1]],["Date",$("fdate").value||"To be chosen"],["Departs",hm(a[1])],["Travellers",pax],["Total","$"+pr.toLocaleString()]]}}).sort(function(a,b){return a.pr-b.pr});
+ $("fcount").textContent=items.length+" sample flights to "+d[0]+", cheapest first";mount($("fout"),items)}
+$("ff").onsubmit=function(e){e.preventDefault();flights()};$("fto").onchange=flights;$("ffrom").onchange=flights;flights();
+/* hotels */
+var HOT=[["Namzoya Beach Suites","Accra","Seafront rooms and a pool near Labadi",95,"Beachfront stay in Accra with sea views and a pool. Good for relaxed days by the water."],["Namzoya Hills Lodge","Kumasi","Quiet lodge with garden breakfasts",70,"A calm base in Kumasi with garden breakfasts, handy for the markets and Manhyia Palace."],["Namzoya Savanna Lodge","Tamale","Garden rooms and a shaded patio",65,"Quiet lodge in Tamale, a handy base for the markets and day trips to Mole National Park."],["Namzoya Castle View","Cape Coast","Rooms with a view of the old fort",80,"Overlooks the old fort in Elmina, a short drive from Cape Coast Castle."],["Namzoya Canopy Lodge","Cape Coast","Forest cabins near the canopy walk",75,"Forest cabins near Kakum National Park, home of the famous canopy walkway."],["Namzoya Seafront Resort","Zanzibar","Pool, spa and beach bar",140,"Pool, spa and a beach bar on Zanzibar's coast. A good pick for a slow week."],["Alfama Boutique","Lisbon","Tiled lobby and river views",120,"Small hotel in Lisbon's old Alfama district, near tram routes and fado bars."],["Namzoya Rice Terrace Villas","Bali","Private pool villas",160,"Private pool villas among Bali's rice fields, with quiet mornings."],["Namzoya Mountain Guesthouse","Cape Town","Breakfast with a view",110,"Breakfast with a Table Mountain view, in a guesthouse that feels like home."]];
+var hc="All";chips("hchips",["All","Accra","Kumasi","Tamale","Cape Coast","Zanzibar","Lisbon","Bali","Cape Town"],function(c){hc=c;hot()});
+function hot(){mount($("hout"),HOT.filter(function(h){return hc==="All"||h[1]===hc}).map(function(h,i){return{t:h[0],s:h[1],d:h[2],p:"$"+h[3]+" / night",b:"Reserve",k:h[4],c:COL[i%6],rows:[["Hotel",h[0]],["City",h[1]],["Rate","$"+h[3]+" per night"]]}}))}hot();
+/* restaurants */
+var RES=[["Namzoya Jollof & Grill House","Accra","Ghanaian","Smoky party jollof with grilled chicken","$$","Jollof is spiced tomato rice, often served with grilled chicken, fish or fried plantain."],["Namzoya Waakye Corner","Accra","Ghanaian","Waakye with shito, egg and fried plantain","$","Waakye is rice and beans cooked together, served with shito (pepper sauce), egg and plantain."],["Namzoya Banku & Tilapia Spot","Cape Coast","Ghanaian","Grilled tilapia with banku and pepper","$$","Banku is a soft fermented corn and cassava dough, eaten with grilled tilapia and hot pepper sauce."],["Namzoya Fufu Kitchen","Kumasi","Ghanaian","Hand-pounded fufu with goat light soup","$$","Fufu is pounded cassava and plantain. Light soup is a spicy tomato broth with goat or fish."],["Namzoya Tuo Zaafi Kitchen","Tamale","Ghanaian","Tuo zaafi with green ayoyo soup","$","Tuo zaafi (TZ) is a soft millet or maize dough eaten with ayoyo soup, a northern Ghana favourite."],["Kelewele Night Market","Accra","Street food","Spiced fried plantain and groundnuts","$","Kelewele is ripe plantain cubes fried with ginger and pepper, a popular evening snack."],["Namzoya Seafood Grill","Cape Coast","Seafood","Fresh catch by the shore","$$","The daily catch grilled over charcoal, usually served with banku or fried yam."],["Riverside Petiscos","Lisbon","Continental","Small plates and local wine","$$$","Petiscos are Portuguese small plates for sharing, like grilled sausage and cod fritters."],["Rooftop Tagine","Marrakech","Continental","Sunset dinner above the souks","$$$","A tagine is a slow-cooked Moroccan stew, named after the clay pot it cooks in."]];
+var rc="All";chips("rchips",["All","Ghanaian","Street food","Seafood","Continental"],function(c){rc=c;res()});
+function res(){mount($("rout"),RES.filter(function(r){return rc==="All"||r[2]===rc}).map(function(r,i){return{t:r[0],s:r[1]+" | "+r[2],d:r[3],p:r[4],b:"Book a table",k:r[5],c:COL[(i+2)%6],rows:[["Restaurant",r[0]],["City",r[1]],["Cuisine",r[2]],["Price",r[4]]]}}))}res();
+/* transport */
+var TR=[["Namzoya Airport Pickup","Kotoka (ACC)","Meet-and-greet driver to your hotel in Accra",35,"Transfer"],["Namzoya Car Hire","Accra and beyond","Full day with a local driver, fuel not included",90,"Car hire"],["Namzoya VIP Bus","Accra to Kumasi","Comfortable seats and a luggage hold",15,"Bus"],["Namzoya VIP Bus","Accra to Cape Coast","Morning and afternoon departures",10,"Bus"],["Namzoya Rides","Accra and Kumasi","Short rides by app, pay by cash or card",6,"Ride"],["Namzoya Heritage Tour","Cape Coast and Elmina","Guided trip to the castles with transport",55,"Car hire"]];
+var tc="All";chips("tchips",["All","Transfer","Car hire","Bus","Ride"],function(c){tc=c;tra()});
+function tra(){mount($("tout"),TR.filter(function(r){return tc==="All"||r[4]===tc}).map(function(r,i){return{t:r[0],s:r[1],d:r[2],p:"from $"+r[3],b:"Request",c:COL[(i+4)%6],rows:[["Service",r[0]],["Where",r[1]],["From","$"+r[3]]]}}))}tra();
+/* recently visited */
+var RV=[];try{RV=JSON.parse(localStorage.getItem("bmat_recent")||"[]");if(!Array.isArray(RV))RV=[]}catch(e){RV=[]}
+function visit(o,kind){RV=RV.filter(function(r){return!(r.t===o.t&&r.k===kind)});RV.unshift({t:o.t,s:o.s||"",k:kind,rows:o.rows});RV=RV.slice(0,8);try{localStorage.setItem("bmat_recent",JSON.stringify(RV))}catch(e){}rv()}
+function rv(){var L=$("rvlist");$("rvx").hidden=!RV.length;
+ if(!RV.length){L.innerHTML='<p class="rvempty">Places you open or book will show up here.</p>';return}
+ L.innerHTML="";RV.forEach(function(r){var b=document.createElement("button");b.className="rv";b.innerHTML='<small>'+esc(r.k)+'</small><b>'+esc(r.t)+'</b><span>'+esc(r.s)+'</span>';b.onclick=function(){ticket(r,r.k)};L.appendChild(b)})}
+$("rvx").onclick=function(){RV=[];try{localStorage.removeItem("bmat_recent")}catch(e){}rv()};rv();
+/* profile drawer */
+var prof=null;try{prof=JSON.parse(localStorage.getItem("bmat_profile")||"null")}catch(e){}
+var STY=["Beach","City","Culture","Adventure"],CITY=["Accra","Kumasi","Tamale","Takoradi","Cape Coast","Other"];
+function ubtn(){$("userbtn").textContent=prof&&prof.name?prof.name.trim().charAt(0).toUpperCase():"\u{1F464}"}
+function pform(){var p=prof||{};$("din").innerHTML='<h2>Create your profile</h2><p class="note">Akwaaba! Tell us a little so we can suggest trips. Your details stay on this device only.</p>'+
+ '<form id="pf" style="display:grid;gap:14px"><div class="fld"><label for="pn">Full name</label><input type="text" id="pn" required autocomplete="name" value="'+esc(p.name||"")+'"></div>'+
+ '<div class="fld"><label for="pe">Email</label><input type="email" id="pe" required autocomplete="email" value="'+esc(p.email||"")+'"></div>'+
+ '<div class="fld"><label for="pp">Phone</label><input type="tel" id="pp" autocomplete="tel" value="'+esc(p.phone||"")+'"></div>'+
+ '<div class="fld"><label for="pc">Home city</label><select id="pc">'+CITY.map(function(c){return '<option'+(p.city===c?' selected':'')+'>'+c+'</option>'}).join("")+'</select></div>'+
+ '<div><label id="sl">Travel style</label><div class="chk" role="group" aria-labelledby="sl">'+STY.map(function(s){return '<label><input type="checkbox" value="'+s+'"'+((p.styles||[]).indexOf(s)>-1?' checked':'')+'>'+s+'</label>'}).join("")+'</div></div>'+
+ '<button class="book">Save profile</button></form>';
+ $("pf").onsubmit=function(e){e.preventDefault();prof={name:$("pn").value.trim(),email:$("pe").value.trim(),phone:$("pp").value.trim(),city:$("pc").value,styles:$$("#pf .chk input:checked").map(function(x){return x.value})};
+  try{localStorage.setItem("bmat_profile",JSON.stringify(prof))}catch(x){}ubtn();pview()}}
+function pview(){$("din").innerHTML='<h2>Akwaaba, '+esc(prof.name.split(" ")[0])+'!</h2><p class="note">Your profile is saved on this device.</p><dl class="pass" style="padding:0;grid-template-columns:auto 1fr"><dt>Email</dt><dd>'+esc(prof.email)+'</dd><dt>Phone</dt><dd>'+esc(prof.phone||"Not added")+'</dd><dt>Home city</dt><dd>'+esc(prof.city)+'</dd><dt>Travel style</dt><dd>'+esc(prof.styles.join(", ")||"Not chosen")+'</dd></dl><button class="book" id="pe2">Edit profile</button><button class="chip" id="po">Sign out</button>';
+ $("pe2").onclick=pform;$("po").onclick=function(){prof=null;try{localStorage.removeItem("bmat_profile")}catch(x){}ubtn();pform()}}
+function drawer(o){$("drawer").classList.toggle("open",o);$("scrim").classList.toggle("open",o);$("drawer").setAttribute("aria-hidden",!o);
+ if(o){prof?pview():pform();setTimeout(function(){var f=$("dx");f.focus()},60)}else $("userbtn").focus()}
+$("userbtn").onclick=function(){drawer(true)};$("dx").onclick=function(){drawer(false)};$("scrim").onclick=function(){drawer(false)};
+document.addEventListener("keydown",function(e){if(e.key==="Escape"&&$("drawer").classList.contains("open"))drawer(false)});ubtn();
+/* chat */
+var CH=[{id:1,name:"Cape Coast Trip",mem:"You, Ama, Kofi, Esi",msgs:[["Ama","Booked the castle tour for Saturday!","09:12"],["Kofi","Great. Who is bringing snacks for the Kakum walk?","09:20"],["Esi","I will. Also check the bus times from Accra.","09:31"]]},
+{id:2,name:"Family Vacation",mem:"You, Maa, Yaw, Akosua",msgs:[["Maa","Let us pick the hotel by Friday.","Yesterday"],["Yaw","Namzoya Beach Suites looked nice.","Yesterday"]]},
+{id:3,name:"Kumasi Weekend",mem:"You, Kwame",msgs:[["Kwame","Are we visiting Bonwire for kente?","Mon"]]}],cur=1;
+function cget(){return CH.filter(function(c){return c.id===cur})[0]}
+function lastOf(c){return c.msgs[c.msgs.length-1]}
+function recent(){$("recent").innerHTML='<div class="rbox"><h3>Recent chats</h3>'+CH.slice(0,3).map(function(c){var l=lastOf(c);return '<button class="rc" data-id="'+c.id+'"><b>'+esc(c.name)+'</b><span>'+esc(l?l[0]+": "+l[1]:"No messages yet")+'</span></button>'}).join("")+'</div>';
+ $$("#recent .rc").forEach(function(b){b.onclick=function(){openChat(+b.dataset.id)}})}
+function chatList(){$("cl").innerHTML=CH.map(function(c){var l=lastOf(c);return '<li><button class="chatli" data-id="'+c.id+'"'+(c.id===cur?' aria-current="true"':'')+'><b>'+esc(c.name)+'</b><span>'+esc(l?l[1]:"No messages yet")+'</span></button></li>'}).join("");
+ $$("#cl .chatli").forEach(function(b){b.onclick=function(){cur=+b.dataset.id;chatList();chatPane()}})}
+function chatPane(){var c=cget();$("ch").textContent=c.name;$("cm").textContent=c.mem;
+ $("msgs").innerHTML=c.msgs.length?c.msgs.map(function(m){var me=m[0]==="You";return '<div class="msg'+(me?' me':'')+'">'+(me?'':'<span class="who">'+esc(m[0])+'</span>')+esc(m[1])+'<span class="tm">'+esc(m[2])+'</span></div>'}).join(""):'<p class="note">No messages yet. Say hello.</p>';$("msgs").scrollTop=$("msgs").scrollHeight}
+function openChat(id){cur=id;show("chat");chatList();chatPane()}
+$("cf").onsubmit=function(e){e.preventDefault();var v=$("ci").value.trim();if(!v)return;var c=cget();c.msgs.push(["You",v,new Date().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"})]);CH.splice(CH.indexOf(c),1);CH.unshift(c);$("ci").value="";chatList();chatPane();recent()};
+$("nf").onsubmit=function(e){e.preventDefault();var n=$("nn").value.trim();if(!n)return;var c={id:Date.now(),name:n,mem:"You",msgs:[]};CH.unshift(c);$("nn").value="";recent();openChat(c.id)};
+$("chatbtn").onclick=function(){openChat(cur)};$("cback").onclick=function(){show("home")};recent();
+render();
+</script>
+</body>
+</html>
