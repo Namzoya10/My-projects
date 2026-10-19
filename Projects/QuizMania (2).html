@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuizMania</title>
+    <link rel="stylesheet" href="QuizMania.css">
+</head>
+<body>
+
+<!-- ===== Navigation (shared by every page) ===== -->
+<header class="navbar" id="navbar">
+    <a href="#/home" class="logo">Quiz<span>Mania</span></a>
+    <button class="menu-toggle" aria-label="Menu">&#9776;</button>
+    <ul class="nav-links">
+        <li><a href="#/home">Home</a></li>
+        <li><a href="#/categories">Categories</a></li>
+        <li><a href="#/leaderboard">Leaderboard</a></li>
+        <li><a href="#/profile">Profile</a></li>
+    </ul>
+    <div class="auth-buttons" id="authButtons"></div>
+</header>
+
+<main id="app"></main>
+
+<script>
+
+const SUBJECTS = [
+  { id: "math", name: "Mathematics", icon: "➗", desc: "Numbers, shapes and problem solving. Sharpen your mental maths.",
+    topics: ["Arithmetic", "Algebra", "Geometry"],
+    questions: [
+      { q: "What is 12 × 12?", options: ["124", "132", "144", "156"], answer: 2 },
+      { q: "What is the square root of 81?", options: ["7", "8", "9", "10"], answer: 2 },
+      { q: "Which value is closest to π?", options: ["2.14", "3.14", "4.13", "3.41"], answer: 1 },
+      { q: "What is 15% of 200?", options: ["20", "25", "30", "35"], answer: 2 },
+      { q: "The angles in a triangle add up to?", options: ["90°", "180°", "270°", "360°"], answer: 1 } ] },
+  { id: "science", name: "Science", icon: "🔬", desc: "Biology, chemistry and physics. How the world works.",
+    topics: ["Biology", "Chemistry", "Physics"],
+    questions: [
+      { q: "What is the chemical formula for water?", options: ["HO2", "H2O", "OH2", "H2O2"], answer: 1 },
+      { q: "Which planet is closest to the Sun?", options: ["Venus", "Mercury", "Mars", "Earth"], answer: 1 },
+      { q: "Which gas do plants absorb for photosynthesis?", options: ["Oxygen", "Nitrogen", "Carbon dioxide", "Hydrogen"], answer: 2 },
+      { q: "What is the hardest natural substance?", options: ["Gold", "Iron", "Diamond", "Quartz"], answer: 2 },
+      { q: "How many bones are in an adult human body?", options: ["156", "206", "256", "306"], answer: 1 } ] },
+  { id: "history", name: "History", icon: "🏛️", desc: "People, events and civilizations that shaped our world.",
+    topics: ["World History", "African History", "Ancient Civilizations"],
+    questions: [
+      { q: "Who was the first president of the United States?", options: ["Abraham Lincoln", "George Washington", "Thomas Jefferson", "John Adams"], answer: 1 },
+      { q: "In which year did Ghana gain independence?", options: ["1947", "1957", "1960", "1966"], answer: 1 },
+      { q: "In which year did World War II end?", options: ["1918", "1939", "1945", "1950"], answer: 2 },
+      { q: "In which country are the Great Pyramids of Giza?", options: ["Egypt", "Mexico", "Greece", "Peru"], answer: 0 },
+      { q: "Which explorer reached the Americas in 1492?", options: ["Christopher Columbus", "Ferdinand Magellan", "James Cook", "Vasco da Gama"], answer: 0 } ] },
+  { id: "geography", name: "Geography", icon: "🌍", desc: "Countries, capitals, rivers and landforms around the globe.",
+    topics: ["Countries & Capitals", "Oceans & Rivers", "Landforms"],
+    questions: [
+      { q: "What is the capital city of Ghana?", options: ["Kumasi", "Accra", "Tamale", "Takoradi"], answer: 1 },
+      { q: "Which is the largest ocean?", options: ["Atlantic", "Indian", "Pacific", "Arctic"], answer: 2 },
+      { q: "Which is the longest river in Africa?", options: ["Congo", "Niger", "Nile", "Volta"], answer: 2 },
+      { q: "How many continents are there?", options: ["5", "6", "7", "8"], answer: 2 },
+      { q: "Mount Everest is part of which mountain range?", options: ["Andes", "Alps", "Himalayas", "Rockies"], answer: 2 } ] },
+  { id: "english", name: "English", icon: "📚", desc: "Grammar, vocabulary and spelling. Use words with confidence.",
+    topics: ["Grammar", "Vocabulary", "Spelling"],
+    questions: [
+      { q: "What is the plural of \"child\"?", options: ["Childs", "Children", "Childrens", "Childes"], answer: 1 },
+      { q: "Which word means the same as \"happy\"?", options: ["Sad", "Joyful", "Angry", "Tired"], answer: 1 },
+      { q: "Which of these is a noun?", options: ["Run", "Quickly", "Beauty", "Beautiful"], answer: 2 },
+      { q: "What is the opposite of \"ancient\"?", options: ["Modern", "Old", "Historic", "Past"], answer: 0 },
+      { q: "Which spelling is correct?", options: ["Recieve", "Receive", "Receeve", "Receve"], answer: 1 } ] },
+  { id: "tech", name: "Technology", icon: "💻", desc: "Computers, the web and coding basics for the digital age.",
+    topics: ["Web Development", "Hardware", "Programming"],
+    questions: [
+      { q: "What does HTML stand for?", options: ["HyperText Markup Language", "High Text Machine Language", "Hyperlink Text Mark Language", "Home Tool Markup Language"], answer: 0 },
+      { q: "What is CSS used for?", options: ["Styling web pages", "Storing databases", "Networking", "Compiling code"], answer: 0 },
+      { q: "What does CPU stand for?", options: ["Central Processing Unit", "Computer Personal Unit", "Central Program Utility", "Core Process Unit"], answer: 0 },
+      { q: "Which of these is a programming language?", options: ["Router", "Python", "Monitor", "Keyboard"], answer: 1 },
+      { q: "How many bits are in one byte?", options: ["4", "8", "16", "32"], answer: 1 } ] }
+];
+
+const SEED_PLAYERS = [
+  { name: "Ama", points: 480, quizzes: 12 }, { name: "Kwame", points: 450, quizzes: 11 },
+  { name: "Efua", points: 420, quizzes: 10 }, { name: "Kojo", points: 390, quizzes: 9 },
+  { name: "Abena", points: 360, quizzes: 9 }
+];
+
+/* ---------- Helpers ---------- */
+const store = {
+  get(key, fallback) { try { const v = JSON.parse(localStorage.getItem(key)); return v === null ? fallback : v; } catch (e) { return fallback; } },
+  set(key, value) { localStorage.setItem(key, JSON.stringify(value)); }
+};
+const currentUser = () => store.get("qm_current", null);
+const escapeHtml = t => String(t).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+function shuffle(list) {
+  const a = list.slice();
+  for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+  return a;
+}
+function getLeaderboard() {
+  const table = {};
+  SEED_PLAYERS.forEach(p => { table["seed:" + p.name] = { name: p.name, points: p.points, quizzes: p.quizzes, email: null }; });
+  store.get("qm_scores", []).forEach(s => {
+    const row = table[s.email] || (table[s.email] = { name: s.name, points: 0, quizzes: 0, email: s.email });
+    row.points += s.score * 10; row.quizzes += 1;
+  });
+  return Object.values(table).sort((a, b) => b.points - a.points);
+}
+function observeReveal() {
+  const items = document.querySelectorAll(".reveal:not(.show)");
+  if (!("IntersectionObserver" in window)) { items.forEach(i => i.classList.add("show")); return; }
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add("show"); io.unobserve(e.target); } });
+  }, { threshold: 0.15 });
+  items.forEach(i => io.observe(i));
+}
+const $ = id => document.getElementById(id);
+const app = $("app");
+const FOOT = '<footer class="footer">&copy; 2026 QuizMania. Think fast. Learn more. Beat your best.</footer>';
+const MEDALS = ["&#129351;", "&#129352;", "&#129353;"];
+
+/* ---------- Navbar behaviour ---------- */
+const nav = $("navbar");
+function onScroll() { nav.classList.toggle("scrolled", window.scrollY > 20); }
+window.addEventListener("scroll", onScroll, { passive: true });
+document.querySelector(".menu-toggle").addEventListener("click", () => nav.classList.toggle("open"));
+
+function renderAuth() {
+  const user = currentUser(), box = $("authButtons");
+  if (user) {
+    box.innerHTML = '<a class="login-btn" href="#/profile">👤 ' + escapeHtml(user.name.split(" ")[0]) + '</a><button class="signup-btn" id="logoutBtn">Logout</button>';
+    $("logoutBtn").addEventListener("click", () => { localStorage.removeItem("qm_current"); renderAuth(); location.hash = "#/home"; router(); });
+  } else {
+    box.innerHTML = '<a class="login-btn" href="#/login">Login</a><a class="signup-btn" href="#/login?mode=signup">Sign Up</a>';
+  }
+}
+
+/* ---------- PAGES ---------- */
+const pages = {};
+
+pages.home = () => {
+  app.innerHTML =
+    '<div class="head"><span class="bubble b1"></span><span class="bubble b2"></span><span class="bubble b3"></span>' +
+    '<h1>Think Fast.<br><span class="p-colour">Learn More.</span><br>Beat Your Best.</h1>' +
+    '<p class="lead">QuizMania is a platform for testing your knowledge and improving your skills. Play quizzes, compete with others, and enhance your learning experience!</p>' +
+    '<div class="hero-btns"><a class="signup-btn" href="#/quizzes">Start Quiz</a><a class="login-btn" href="#/categories">Explore</a></div>' +
+    '<span class="scroll-hint">Scroll down &#8595;</span></div>' +
+
+    '<section class="section alt"><h2 class="reveal">Explore QuizMania</h2><p class="reveal">Choose where to go and start your journey!</p>' +
+    '<div class="button-list reveal"><a href="#/quizzes"><span>&#128221;</span>Quizzes</a><a href="#/study"><span>&#128214;</span>Study Room</a>' +
+    '<a href="#/tutor"><span>&#127891;</span>Become a Tutor</a><a href="#/search"><span>&#128269;</span>Search</a></div></section>' +
+
+    '<section class="section"><h2 class="reveal">Quiz categories</h2><p class="reveal">Pick a subject and test yourself.</p><div class="grid">' +
+    SUBJECTS.map(s => '<a class="card reveal" href="#/quiz?cat=' + s.id + '"><div class="icon">' + s.icon + '</div><h3>' + s.name + '</h3><p>' + s.questions.length + ' questions</p></a>').join('') +
+    '</div></section>' +
+
+    '<section class="section alt"><h2 class="reveal">How it works</h2><div class="grid">' +
+    '<div class="card reveal"><div class="icon">&#128100;</div><h3>Create an account</h3><p>Sign up for free so your scores are saved.</p></div>' +
+    '<div class="card reveal"><div class="icon">&#9889;</div><h3>Take a quiz</h3><p>Answer questions and see instantly if you got them right.</p></div>' +
+    '<div class="card reveal"><div class="icon">&#127942;</div><h3>Climb the leaderboard</h3><p>Earn 10 points for every correct answer and beat other players.</p></div></div></section>' +
+
+    '<section class="section"><h2 class="reveal">Top players</h2><p class="reveal">Who is leading right now?</p><div class="grid">' +
+    getLeaderboard().slice(0, 3).map((p, i) => '<div class="card reveal"><div class="icon">' + MEDALS[i] + '</div><h3>' + escapeHtml(p.name) + '</h3><p>' + p.points + ' points</p></div>').join('') +
+    '</div><div class="actions"><a class="signup-btn" href="#/login?mode=signup">Join QuizMania</a><a class="login-btn" href="#/leaderboard">Full leaderboard</a></div>' + FOOT + '</section>';
+};
+
+pages.categories = () => {
+  app.innerHTML =
+    '<div class="page-hero"><h1>Quiz <span class="p-colour">categories</span></h1><p>Choose a category and start your journey!</p>' +
+    '<div class="chips">' + SUBJECTS.map(s => '<button class="chip" data-go="sec-' + s.id + '">' + s.icon + ' ' + s.name + '</button>').join('') + '</div></div>' +
+    SUBJECTS.map((s, i) =>
+      '<section class="section ' + (i % 2 ? '' : 'alt') + '" id="sec-' + s.id + '"><div class="split reveal"><div class="big-icon">' + s.icon + '</div><div><h2>' + s.name + '</h2><p>' + s.desc + '</p>' +
+      '<ul class="topic-list">' + s.topics.map(t => '<li>' + t + '</li>').join('') + '</ul>' +
+      '<div class="actions"><a class="signup-btn" href="#/quiz?cat=' + s.id + '">Start Quiz</a><a class="login-btn" href="#/study?cat=' + s.id + '">Study</a></div>' +
+      '<p class="muted">' + s.questions.length + ' questions</p></div></div></section>').join('') + FOOT;
+  document.querySelectorAll("[data-go]").forEach(b => b.addEventListener("click", () => $(b.dataset.go).scrollIntoView({ behavior: "smooth" })));
+};
+
+pages.quizzes = () => {
+  app.innerHTML =
+    '<div class="page-hero"><h1>Pick a <span class="p-colour">quiz</span></h1><p>Play a single subject or take on a mixed challenge from every category.</p></div>' +
+    '<div class="content"><div class="grid" style="margin:0 auto;">' +
+    '<a class="card" href="#/quiz?cat=mixed" style="border-color:#00a9d6;"><div class="icon">&#127922;</div><h3>Mixed Challenge</h3><p>10 random questions from every subject</p></a>' +
+    SUBJECTS.map(s => '<a class="card" href="#/quiz?cat=' + s.id + '"><div class="icon">' + s.icon + '</div><h3>' + s.name + ' Quiz</h3><p>' + s.questions.length + ' questions</p></a>').join('') +
+    '</div></div>' + FOOT;
+};
+
+pages.quiz = params => {
+  const cat = params.get("cat") || "mixed";
+  let title, pool;
+  if (cat === "mixed") { title = "Mixed Challenge"; pool = shuffle(SUBJECTS.flatMap(s => s.questions)).slice(0, 10); }
+  else { const s = SUBJECTS.find(x => x.id === cat) || SUBJECTS[0]; title = s.name + " Quiz"; pool = shuffle(s.questions); }
+  document.title = title + " | QuizMania";
+  app.innerHTML = '<div class="page-hero"><h1>' + title + '</h1></div><div class="content"><div class="quiz-box" id="quizBox"></div></div>' + FOOT;
+  const box = $("quizBox");
+  let index = 0, score = 0;
+
+  function showQuestion() {
+    const q = pool[index];
+    const opts = shuffle(q.options.map((t, i) => ({ t: t, correct: i === q.answer })));
+    box.innerHTML =
+      '<div class="q-meta"><span>Question ' + (index + 1) + ' of ' + pool.length + '</span><span>Score: ' + score + '</span></div>' +
+      '<div class="progress"><div style="width:' + (index / pool.length * 100) + '%"></div></div>' +
+      '<div class="q-text">' + escapeHtml(q.q) + '</div><div id="opts"></div><div class="center" id="nextWrap"></div>';
+    const wrap = $("opts");
+    opts.forEach(o => {
+      const b = document.createElement("button");
+      b.className = "option"; b.textContent = o.t;
+      b.addEventListener("click", () => answer(b, o, wrap, q));
+      wrap.appendChild(b);
+    });
+  }
+  function answer(btn, opt, wrap, q) {
+    wrap.querySelectorAll("button").forEach(b => b.disabled = true);
+    if (opt.correct) { score++; btn.classList.add("correct"); }
+    else {
+      btn.classList.add("wrong");
+      wrap.querySelectorAll("button").forEach(b => { if (b.textContent === q.options[q.answer]) b.classList.add("correct"); });
+    }
+    const last = index === pool.length - 1;
+    const next = document.createElement("button");
+    next.className = "signup-btn"; next.style.marginTop = "14px";
+    next.textContent = last ? "See results" : "Next question";
+    next.addEventListener("click", () => { index++; last ? showResults() : showQuestion(); });
+    $("nextWrap").appendChild(next);
+  }
+  function showResults() {
+    const user = currentUser();
+    let note;
+    if (user) {
+      const scores = store.get("qm_scores", []);
+      scores.push({ email: user.email, name: user.name, subject: title, score: score, total: pool.length, date: new Date().toISOString() });
+      store.set("qm_scores", scores);
+      note = '<p class="msg ok">Score saved to your profile. You earned ' + (score * 10) + ' points.</p>';
+    } else {
+      note = '<p class="msg">Want your score on the leaderboard? <a href="#/login?next=quizzes">Log in</a> or <a href="#/login?mode=signup&next=quizzes">sign up</a> before your next quiz.</p>';
+    }
+    const pct = Math.round(score / pool.length * 100);
+    const verdict = pct >= 80 ? "Excellent work!" : pct >= 50 ? "Good effort. Keep practising." : "Review the Study Room and try again.";
+    box.innerHTML = '<div class="center"><div class="score-big">' + score + '/' + pool.length + '</div><h2>' + verdict + '</h2>' + note +
+      '<div class="actions" style="justify-content:center;"><button class="signup-btn" id="again">Play again</button>' +
+      '<a class="login-btn" href="#/quizzes">More quizzes</a><a class="login-btn" href="#/leaderboard">Leaderboard</a></div></div>';
+    $("again").addEventListener("click", () => pages.quiz(params));
+  }
+  showQuestion();
+};
+
+let timerId = null;   // study timer lives outside the page so it can be cleared on navigation
+pages.study = params => {
+  const startCat = params.get("cat");
+  let active = SUBJECTS.some(s => s.id === startCat) ? startCat : SUBJECTS[0].id;
+  app.innerHTML =
+    '<div class="page-hero"><h1>Study <span class="p-colour">Room</span></h1><p>Flip the cards to revise, then take the quiz. Use the timer to stay focused.</p></div>' +
+    '<div class="content"><div class="timer-box"><div class="muted">Focus timer</div><div class="timer" id="timer">25:00</div>' +
+    '<div class="actions" style="justify-content:center;"><button class="signup-btn" id="timerStart">Start</button><button class="login-btn" id="timerReset">Reset</button></div></div>' +
+    '<div class="chips" id="tabs" style="margin-bottom:26px;"></div><div class="grid" style="margin:0 auto;" id="cards"></div></div>' + FOOT;
+
+  function render() {
+    $("tabs").innerHTML = SUBJECTS.map(s => '<button class="chip ' + (s.id === active ? "active" : "") + '" data-id="' + s.id + '">' + s.icon + ' ' + s.name + '</button>').join("");
+    const s = SUBJECTS.find(x => x.id === active);
+    $("cards").innerHTML = s.questions.map(q => '<div class="flip"><div class="flip-inner"><div class="face front">' + escapeHtml(q.q) + '</div><div class="face back">' + escapeHtml(q.options[q.answer]) + '</div></div></div>').join("");
+    document.querySelectorAll("#tabs .chip").forEach(c => c.addEventListener("click", () => { active = c.dataset.id; render(); }));
+    document.querySelectorAll(".flip").forEach(f => f.addEventListener("click", () => f.classList.toggle("flipped")));
+  }
+  render();
+
+  let secs = 1500;
+  const startBtn = $("timerStart");
+  const draw = () => { $("timer").textContent = String(Math.floor(secs / 60)).padStart(2, "0") + ":" + String(secs % 60).padStart(2, "0"); };
+  startBtn.addEventListener("click", () => {
+    if (timerId) { clearInterval(timerId); timerId = null; startBtn.textContent = "Resume"; return; }
+    startBtn.textContent = "Pause";
+    timerId = setInterval(() => {
+      secs--; draw();
+      if (secs <= 0) { clearInterval(timerId); timerId = null; startBtn.textContent = "Start"; secs = 1500; draw(); alert("Time is up. Take a short break!"); }
+    }, 1000);
+  });
+  $("timerReset").addEventListener("click", () => { clearInterval(timerId); timerId = null; secs = 1500; draw(); startBtn.textContent = "Start"; });
+};
+
+pages.tutor = () => {
+  app.innerHTML =
+    '<div class="page-hero"><h1>Become a <span class="p-colour">Tutor</span></h1><p>Share what you know, help other learners, and build your teaching profile.</p></div>' +
+    '<div class="content"><div class="grid" style="margin:0 auto 40px;">' +
+    '<div class="card"><div class="icon">&#129309;</div><h3>Help learners</h3><p>Guide students who are stuck on a topic.</p></div>' +
+    '<div class="card"><div class="icon">&#128218;</div><h3>Create content</h3><p>Suggest questions and study cards for your subject.</p></div>' +
+    '<div class="card"><div class="icon">&#11088;</div><h3>Build a reputation</h3><p>Grow your profile as a trusted tutor.</p></div></div>' +
+    '<div class="form-card wide"><h2>Apply now</h2><form id="tutorForm">' +
+    '<label for="tName">Full name</label><input id="tName" type="text" required>' +
+    '<label for="tEmail">Email</label><input id="tEmail" type="email" required>' +
+    '<label>Subjects you can teach</label><div class="check-grid">' + SUBJECTS.map(s => '<label><input type="checkbox" value="' + s.name + '"> ' + s.name + '</label>').join("") + '</div>' +
+    '<label for="tAbout">Tell us about your experience</label><textarea id="tAbout" rows="4" required></textarea>' +
+    '<p class="msg" id="tMsg"></p><button class="signup-btn" type="submit">Submit application</button></form></div></div>' + FOOT;
+  const u = currentUser();
+  if (u) { $("tName").value = u.name; $("tEmail").value = u.email; }
+  $("tutorForm").addEventListener("submit", e => {
+    e.preventDefault();
+    const msg = $("tMsg");
+    const picked = [...document.querySelectorAll(".check-grid input:checked")].map(i => i.value);
+    if (!picked.length) { msg.className = "msg error"; msg.textContent = "Choose at least one subject."; return; }
+    const apps = store.get("qm_tutors", []);
+    apps.push({ name: $("tName").value.trim(), email: $("tEmail").value.trim(), subjects: picked, about: $("tAbout").value.trim(), date: new Date().toISOString() });
+    store.set("qm_tutors", apps);
+    msg.className = "msg ok"; msg.textContent = "Application received. Thank you, " + $("tName").value.trim().split(" ")[0] + "!";
+    e.target.reset();
+  });
+};
+
+pages.search = () => {
+  app.innerHTML =
+    '<div class="page-hero"><h1><span class="p-colour">Search</span> QuizMania</h1><p>Find a subject, a topic or a question.</p>' +
+    '<div style="max-width:520px;margin:18px auto 0;"><input id="q" type="search" placeholder="Try &quot;algebra&quot;, &quot;river&quot; or &quot;HTML&quot;"></div>' +
+    '<div class="chips">' + SUBJECTS.map(s => '<button class="chip" data-q="' + s.name + '">' + s.icon + ' ' + s.name + '</button>').join("") + '</div></div>' +
+    '<div class="content" id="results"></div>' + FOOT;
+  const input = $("q"), out = $("results");
+  function run() {
+    const term = input.value.trim().toLowerCase();
+    if (!term) { out.innerHTML = '<p class="center muted">Type something to start searching.</p>'; return; }
+    const subs = SUBJECTS.filter(s => [s.name, s.desc].concat(s.topics).join(" ").toLowerCase().includes(term));
+    const qs = SUBJECTS.flatMap(s => s.questions.filter(x => x.q.toLowerCase().includes(term)).map(x => ({ q: x.q, s: s })));
+    if (!subs.length && !qs.length) { out.innerHTML = '<p class="center">No results for <b>' + escapeHtml(input.value) + '</b>. Try a different word.</p>'; return; }
+    let html = "";
+    if (subs.length) html += '<h2>Subjects</h2><div class="grid" style="margin:0 0 30px;">' + subs.map(s => '<a class="card" href="#/quiz?cat=' + s.id + '"><div class="icon">' + s.icon + '</div><h3>' + s.name + '</h3><p>' + s.topics.join(", ") + '</p></a>').join("") + '</div>';
+    if (qs.length) html += '<h2>Questions</h2><div class="grid" style="margin:0;">' + qs.map(r => '<a class="card" href="#/quiz?cat=' + r.s.id + '"><h3>' + escapeHtml(r.q) + '</h3><p>' + r.s.icon + ' ' + r.s.name + '</p></a>').join("") + '</div>';
+    out.innerHTML = html;
+  }
+  input.addEventListener("input", run);
+  document.querySelectorAll("[data-q]").forEach(c => c.addEventListener("click", () => { input.value = c.dataset.q; run(); }));
+  run();
+};
+
+pages.leaderboard = () => {
+  const me = currentUser();
+  app.innerHTML =
+    '<div class="page-hero"><h1><span class="p-colour">Leaderboard</span></h1><p>Earn 10 points for every correct answer. Log in so your scores count.</p></div>' +
+    '<div class="content"><div class="table-wrap"><table class="table"><thead><tr><th>Rank</th><th>Player</th><th>Quizzes</th><th>Points</th></tr></thead><tbody>' +
+    getLeaderboard().map((p, i) => {
+      const mine = me && p.email === me.email;
+      return '<tr class="' + (mine ? "me" : "") + '"><td>' + (MEDALS[i] || (i + 1)) + '</td><td>' + escapeHtml(p.name) + (mine ? " (you)" : "") + '</td><td>' + p.quizzes + '</td><td>' + p.points + '</td></tr>';
+    }).join("") + '</tbody></table></div></div>' + FOOT;
+};
+
+pages.profile = () => {
+  const user = currentUser();
+  let body;
+  if (!user) {
+    body = '<div class="form-card center"><h2>You are not logged in</h2><p>Log in to see your scores and progress.</p>' +
+      '<div class="actions" style="justify-content:center;"><a class="signup-btn" href="#/login?next=profile">Login</a><a class="login-btn" href="#/login?mode=signup&next=profile">Sign Up</a></div></div>';
+  } else {
+    const mine = store.get("qm_scores", []).filter(s => s.email === user.email);
+    const totalQ = mine.reduce((a, s) => a + s.total, 0), totalC = mine.reduce((a, s) => a + s.score, 0);
+    const acc = totalQ ? Math.round(totalC / totalQ * 100) + "%" : "-";
+    body = '<div class="center"><div class="avatar">' + escapeHtml(user.name.charAt(0).toUpperCase()) + '</div><h2>' + escapeHtml(user.name) + '</h2><p class="muted">' + escapeHtml(user.email) + '</p></div>' +
+      '<div class="grid" style="margin:20px auto 40px;"><div class="card stat"><div class="num">' + mine.length + '</div><p>Quizzes played</p></div>' +
+      '<div class="card stat"><div class="num">' + acc + '</div><p>Accuracy</p></div><div class="card stat"><div class="num">' + (totalC * 10) + '</div><p>Total points</p></div></div>' +
+      '<h2 class="center">Recent quizzes</h2>' +
+      (mine.length ? '<div class="table-wrap"><table class="table"><thead><tr><th>Quiz</th><th>Score</th><th>Date</th></tr></thead><tbody>' +
+        mine.slice().reverse().slice(0, 10).map(s => '<tr><td>' + escapeHtml(s.subject) + '</td><td>' + s.score + '/' + s.total + '</td><td>' + new Date(s.date).toLocaleDateString() + '</td></tr>').join("") + '</tbody></table></div>'
+        : '<p class="center muted">No quizzes yet. <a href="#/quizzes">Take your first quiz</a>.</p>') +
+      '<div class="actions" style="justify-content:center;margin-top:24px;"><a class="signup-btn" href="#/quizzes">Play a quiz</a></div>';
+  }
+  app.innerHTML = '<div class="page-hero"><h1>Your <span class="p-colour">profile</span></h1></div><div class="content">' + body + '</div>' + FOOT;
+};
+
+pages.login = params => {
+  const next = params.get("next") || "profile";
+  app.innerHTML =
+    '<div class="page-hero"><h1>Welcome to <span class="p-colour">QuizMania</span></h1></div><div class="content"><div class="form-card">' +
+    '<div class="tabs"><button class="tab" id="tabLogin" type="button">Login</button><button class="tab" id="tabSignup" type="button">Sign Up</button></div>' +
+    '<form id="loginForm"><label for="lEmail">Email</label><input id="lEmail" type="email" required autocomplete="email">' +
+    '<label for="lPass">Password</label><input id="lPass" type="password" required autocomplete="current-password"><p class="msg" id="lMsg"></p><button class="signup-btn" type="submit">Login</button></form>' +
+    '<form id="signupForm" hidden><label for="sName">Full name</label><input id="sName" type="text" required autocomplete="name">' +
+    '<label for="sEmail">Email</label><input id="sEmail" type="email" required autocomplete="email">' +
+    '<label for="sPass">Password (at least 6 characters)</label><input id="sPass" type="password" required minlength="6" autocomplete="new-password">' +
+    '<label for="sPass2">Confirm password</label><input id="sPass2" type="password" required autocomplete="new-password"><p class="msg" id="sMsg"></p><button class="signup-btn" type="submit">Create account</button></form>' +
+    '<p class="muted center" style="margin-top:14px;">Demo only: accounts are saved in this browser, not on a server.</p></div></div>' + FOOT;
+
+  function show(mode) {
+    const signup = mode === "signup";
+    $("loginForm").hidden = signup; $("signupForm").hidden = !signup;
+    $("tabLogin").classList.toggle("active", !signup); $("tabSignup").classList.toggle("active", signup);
+  }
+  $("tabLogin").addEventListener("click", () => show("login"));
+  $("tabSignup").addEventListener("click", () => show("signup"));
+  show(params.get("mode") === "signup" ? "signup" : "login");
+
+  function finish(user) {
+    store.set("qm_current", { name: user.name, email: user.email });
+    renderAuth();
+    location.hash = "#/" + next;
+  }
+  $("signupForm").addEventListener("submit", e => {
+    e.preventDefault();
+    const msg = $("sMsg"), email = $("sEmail").value.trim().toLowerCase(), users = store.get("qm_users", []);
+    if ($("sPass").value !== $("sPass2").value) { msg.className = "msg error"; msg.textContent = "Passwords do not match."; return; }
+    if (users.some(u => u.email === email)) { msg.className = "msg error"; msg.textContent = "That email already has an account. Try logging in."; return; }
+    const user = { name: $("sName").value.trim(), email: email, password: $("sPass").value };
+    users.push(user); store.set("qm_users", users); finish(user);
+  });
+  $("loginForm").addEventListener("submit", e => {
+    e.preventDefault();
+    const msg = $("lMsg"), email = $("lEmail").value.trim().toLowerCase();
+    const user = store.get("qm_users", []).find(u => u.email === email && u.password === $("lPass").value);
+    if (!user) { msg.className = "msg error"; msg.textContent = "Wrong email or password. Check them and try again."; return; }
+    finish(user);
+  });
+};
+
+/* ---------- Router: shows the page matching the # in the address bar ---------- */
+const TITLES = { home: "Home", categories: "Categories", quizzes: "Quizzes", quiz: "Quiz", study: "Study Room", tutor: "Become a Tutor", search: "Search", leaderboard: "Leaderboard", profile: "Profile", login: "Login & Sign Up" };
+
+function router() {
+  const raw = location.hash.slice(1) || "/home";
+  const parts = raw.split("?");
+  let name = parts[0].replace(/^\//, "") || "home";
+  if (!pages[name]) name = "home";
+  const params = new URLSearchParams(parts[1] || "");
+
+  clearInterval(timerId); timerId = null;
+  document.documentElement.style.scrollSnapType = (name === "home" || name === "categories") ? "y proximity" : "";
+  window.scrollTo(0, 0);
+  document.title = TITLES[name] + " | QuizMania";
+
+  pages[name](params);
+
+  document.querySelectorAll(".nav-links a").forEach(a => a.classList.toggle("active", a.getAttribute("href") === "#/" + name));
+  nav.classList.remove("open");
+  onScroll();
+  observeReveal();
+}
+window.addEventListener("hashchange", router);
+
+renderAuth();
+router();
+</script>
+</body>
+</html>
