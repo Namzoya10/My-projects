@@ -7,8 +7,6 @@
     <link rel="stylesheet" href="QuizMania.css">
 </head>
 <body>
-
-<!-- ===== Navigation (shared by every page) ===== -->
 <header class="navbar" id="navbar">
     <a href="#/home" class="logo">Quiz<span>Mania</span></a>
     <button class="menu-toggle" aria-label="Menu">&#9776;</button>
@@ -403,7 +401,6 @@ pages.login = params => {
   });
 };
 
-/* ---------- Router: shows the page matching the # in the address bar ---------- */
 const TITLES = { home: "Home", categories: "Categories", quizzes: "Quizzes", quiz: "Quiz", study: "Study Room", tutor: "Become a Tutor", search: "Search", leaderboard: "Leaderboard", profile: "Profile", login: "Login & Sign Up" };
 
 function router() {
